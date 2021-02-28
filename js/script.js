@@ -89,3 +89,36 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     setClock(deadline); //запускаем основную функцию, передаем в нее дедлайн
 });
+
+// Modal
+
+const   openModal = document.querySelectorAll('[data-modal]'),
+        modalWindow = document.querySelector('.modal'),
+        closeModal = document.querySelector('[data-close]');
+
+openModal.forEach(item => {
+    item.addEventListener('click', () => {
+        modalWindow.classList.add('show');
+        modalWindow.classList.remove('hide');
+        document.body.style.overflow = 'hidden';
+    });
+});
+
+function close() {
+    modalWindow.classList.add('hide');
+    modalWindow.classList.remove('show');
+    document.body.style.overflow = 'visible';
+}
+
+closeModal.addEventListener('click', close);
+
+modalWindow.addEventListener('click', (e) => {
+    if (e.target === modalWindow) {
+        close();
+    }
+});
+document.addEventListener('keydown', (e) => {
+    if (e.code === "Escape" && modalWindow.classList.contains('show')) {
+        close();
+    }
+});
