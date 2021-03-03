@@ -97,12 +97,15 @@ const   openModal = document.querySelectorAll('[data-modal]'),
         closeModal = document.querySelector('[data-close]');
 
 openModal.forEach(item => {
-    item.addEventListener('click', () => {
-        modalWindow.classList.add('show');
-        modalWindow.classList.remove('hide');
-        document.body.style.overflow = 'hidden';
-    });
+    item.addEventListener('click', open);
 });
+
+function open() {
+    modalWindow.classList.add('show');
+    modalWindow.classList.remove('hide');
+    document.body.style.overflow = 'hidden';
+    clearInterval(timerOpenId);
+}
 
 function close() {
     modalWindow.classList.add('hide');
@@ -122,3 +125,34 @@ document.addEventListener('keydown', (e) => {
         close();
     }
 });
+
+const timerOpenId = setTimeout(open, 5000);
+
+function showModalByScroll() {
+    if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+        open();
+        window.removeEventListener('scroll', showModalByScroll);
+    }
+}
+
+window.addEventListener('scroll', showModalByScroll);
+
+// урок на понимании функций - конструкторов
+
+function User(name, id) {
+    this.name = name;
+    this.id = id;
+    this.human = true;
+    this.hello = function(){
+        console.log(`Hello ${this.name}`);
+    };
+}
+
+const ivan = new User('Ivan', 28);
+ivan.hello();
+console.log(ivan);
+
+User.prototype.exit = function() {
+    console.log(`${this.name} is gone`);
+}
+ivan.exit();
