@@ -137,22 +137,5 @@ function showModalByScroll() {
 
 window.addEventListener('scroll', showModalByScroll);
 
-// урок на понимании функций - конструкторов
+// cards
 
-function User(name, id) {
-    this.name = name;
-    this.id = id;
-    this.human = true;
-    this.hello = function(){
-        console.log(`Hello ${this.name}`);
-    };
-}
-
-const ivan = new User('Ivan', 28);
-ivan.hello();
-console.log(ivan);
-
-User.prototype.exit = function() {
-    console.log(`${this.name} is gone`);
-}
-ivan.exit();
