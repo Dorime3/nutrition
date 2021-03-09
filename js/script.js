@@ -88,54 +88,110 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
     setClock(deadline); //запускаем основную функцию, передаем в нее дедлайн
-});
+
 
 // Modal
 
-const   openModal = document.querySelectorAll('[data-modal]'),
-        modalWindow = document.querySelector('.modal'),
-        closeModal = document.querySelector('[data-close]');
+    const   openModal = document.querySelectorAll('[data-modal]'),
+            modalWindow = document.querySelector('.modal'),
+            closeModal = document.querySelector('[data-close]');
 
-openModal.forEach(item => {
-    item.addEventListener('click', open);
-});
+    openModal.forEach(item => {
+        item.addEventListener('click', open);
+    });
 
-function open() {
-    modalWindow.classList.add('show');
-    modalWindow.classList.remove('hide');
-    document.body.style.overflow = 'hidden';
-    clearInterval(timerOpenId);
-}
-
-function close() {
-    modalWindow.classList.add('hide');
-    modalWindow.classList.remove('show');
-    document.body.style.overflow = 'visible';
-}
-
-closeModal.addEventListener('click', close);
-
-modalWindow.addEventListener('click', (e) => {
-    if (e.target === modalWindow) {
-        close();
+    function open() {
+        modalWindow.classList.add('show');
+        modalWindow.classList.remove('hide');
+        document.body.style.overflow = 'hidden';
+        clearInterval(timerOpenId);
     }
-});
-document.addEventListener('keydown', (e) => {
-    if (e.code === "Escape" && modalWindow.classList.contains('show')) {
-        close();
+
+    function close() {
+        modalWindow.classList.add('hide');
+        modalWindow.classList.remove('show');
+        document.body.style.overflow = 'visible';
     }
-});
 
-const timerOpenId = setTimeout(open, 5000);
+    closeModal.addEventListener('click', close);
 
-function showModalByScroll() {
-    if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-        open();
-        window.removeEventListener('scroll', showModalByScroll);
+    modalWindow.addEventListener('click', (e) => {
+        if (e.target === modalWindow) {
+            close();
+        }
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.code === "Escape" && modalWindow.classList.contains('show')) {
+            close();
+        }
+    });
+
+    //const timerOpenId = setTimeout(open, 5000);
+
+    function showModalByScroll() {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            open();
+            window.removeEventListener('scroll', showModalByScroll);
+        }
     }
-}
 
-window.addEventListener('scroll', showModalByScroll);
+    window.addEventListener('scroll', showModalByScroll);
 
-// cards
+    // cards
 
+    class MenuCard { // задаем класс для карточек
+        constructor (src, alt, title, subtitle, price, parentElement) {
+            this.src = src, // определяем аргументы через контекст вызова
+            this.alt = alt,
+            this.title = title,
+            this.subtitle = subtitle,
+            this.price = price,
+            this.parentElement = document.querySelector(parentElement) // также задаем родительский элемент, чтобы поместить в него нашу карточку
+        }
+        render() { // Задаем метод
+            const element = document.createElement('div');  // создаем див
+            element.innerHTML = ` 
+            <div class="menu__item">
+                <img src=${this.src} alt=${this.alt}>
+                <h3 class="menu__item-subtitle">${this.title}</h3>
+                <div class="menu__item-descr">${this.subtitle}</div>
+                <div class="menu__item-divider"></div>
+                <div class="menu__item-price">
+                    <div class="menu__item-cost">Цена:</div>
+                    <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+                </div>
+            </div>
+            `; // выводим элемент на страницу, присваиваем в верстку наши переменные через контекст вызова, которые мы определили в классе
+            this.parentElement.append(element); // помещаем элемент внутрь родителя
+        }
+    }
+
+    new MenuCard( // задаем экземпляры карточек
+        "img/tabs/vegy.jpg",
+        "vegy",
+        'Меню "Фитнес"',
+        "Меню 'Фитнес' - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!",
+        228,
+        ".menu .container"
+    ).render(); // вызываем метод
+
+    new MenuCard( // задаем экземпляры карточек
+        "img/tabs/elite.jpg",
+        "elite",
+        'Меню “Премиум”',
+        "В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!",
+        550,
+        ".menu .container"
+    ).render(); // вызываем метод
+
+    new MenuCard( // задаем экземпляры карточек
+        "img/tabs/post.jpg",
+        "post",
+        'Меню "Постное"',
+        "Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.",
+        430,
+        ".menu .container"
+    ).render(); // вызываем метод
+
+
+});
