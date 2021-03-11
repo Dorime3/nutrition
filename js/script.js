@@ -140,7 +140,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // cards
 
     class MenuCard { // задаем класс для карточек
-        constructor (src, alt, title, subtitle, price, parentElement, ...classes) {
+        constructor (src, alt, title, subtitle, price, parentElement, ...classes) { // последний аргумент это rest оператор, образует массив с аргументами
             this.src = src, // определяем аргументы через контекст вызова
             this.alt = alt,
             this.title = title,
@@ -152,11 +152,11 @@ window.addEventListener('DOMContentLoaded', () => {
         render() { // Задаем метод
             const element = document.createElement('div');  // создаем див
             if (this.classes.length === 0) {
-                element.classList.add('menu__item');
+                element.classList.add('menu__item'); // если массив пустой, присваиваем аргумент по умолчанию
             } else {
-                this.classes.forEach(item => element.classList.add(item));
+                this.classes.forEach(item => element.classList.add(item)); // если нет, то перебираем и присваиваем каждый к нашему элементу
             }
-            
+
             element.innerHTML = ` 
                 <img src=${this.src} alt=${this.alt}>
                 <h3 class="menu__item-subtitle">${this.title}</h3>
@@ -200,5 +200,23 @@ window.addEventListener('DOMContentLoaded', () => {
 
     ).render(); // вызываем метод
 
+    // Forms
+
+        const forms = document.querySelectorAll('form');
+
+        function postData(form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const request = new XMLHttpRequest();
+                request.open('POST', 'server.php');
+
+            })
+        }
+
+
+
+
 
 });
+

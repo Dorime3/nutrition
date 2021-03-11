@@ -58,3 +58,10 @@ function calcOrDouble(number, basis = 2) {
     console.log(number * basis);
 }
 calcOrDouble(3);
+
+const persone = {
+    name: 'Alex',
+    tel: '+7444444444'
+};
+
+console.log(JSON.stringify(persone));
