@@ -202,15 +202,46 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Forms
 
-        const forms = document.querySelectorAll('form');
+        const forms = document.querySelectorAll('form'); // получаем формы с idex.html
 
-        function postData(form) {
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
+        const message = { // объект с необходимыми для нас сообщениями
+            loading: 'Загрузка',
+            success: 'Спасибо! Скоро мы с вами свяжемся',
+            failure: 'Что-то пошло не так...'
+        }
 
-                const request = new XMLHttpRequest();
-                request.open('POST', 'server.php');
+        forms.forEach(item => { // перебираем формы и для каждой запускаем функцию postData
+            postData(item);
+        });
 
+        function postData(form) { // 
+            form.addEventListener('submit', (e) => { // событие по нажатию кнопки
+                e.preventDefault(); // обязательно задаем переменную и отменяем привычное поведение. Тк если этого не сделать страница будет перезагружаться
+
+                const statusMessage = document.createElement('div'); // создаем элемент (див)
+                statusMessage.classList.add('status'); // добавляем в него класс (статус)
+                statusMessage.textContent = message.loading; // помещаем в него текст
+                form.append(statusMessage); // помещаем наш элемент в форму
+
+                const request = new XMLHttpRequest(); // делаем запрос
+                request.open('POST', 'server.php'); // говорим что запрос имеет форму POST и куда отсылать данные
+
+                // request.setRequestHeader('Content-type', 'multipart/form-data'); когда создаем запрос через XMLHttpRequest() и затем отправляем его методом FormData() заголовок (setRequestHeader('Content-type', 'multipart/form-data')) создавать не нужно!
+                const formData = new FormData(form); // FormData метод отправки запроса 
+                request.send(formData); // send - отправляем
+
+                request.addEventListener('load', () => { // событие после загрузки
+                    if (request.status === 200) { // если запрос.статус - все ок
+                        console.log(request.response); // выводим ответ (объект) - необязательно
+                        statusMessage.textContent = message.success; // выводим сообщение о том, что все прошло успешно
+                        form.reset(); // очищаем форму
+                        setTimeout(() => {  // метод, которым после задержки, удаляем сообщение
+                            statusMessage.remove();
+                        }, 2000);
+                    } else {
+                        statusMessage.textContent = message.failure; // выводим, если чтото пошло не так
+                    }
+                })
             })
         }
 
