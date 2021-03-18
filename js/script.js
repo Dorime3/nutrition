@@ -40,7 +40,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //Timer
     
-    const deadline = '03-09-2021'; //задаем конечное время
+    const deadline = '03-20-2021'; //задаем конечное время
 
     function timeDifference(end) { // функция для рассчета оставшегося времени
         const   t = Date.parse(end) - Date.parse(new Date()), // в милисекундах, дальше дробим на дни, часы, минуты
@@ -168,36 +168,43 @@ window.addEventListener('DOMContentLoaded', () => {
             this.parentElement.append(element); // помещаем элемент внутрь родителя
         }
     }
+    // Получаем наши карточки с БД json
+    const getResource = async(url) => {
+        const res = await fetch(url);
+        if (!res.ok) {
+            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+        }
+        return await res.json();
+    }
 
-    new MenuCard( // задаем экземпляры карточек
-        "img/tabs/vegy.jpg",
-        "vegy",
-        'Меню "Фитнес"',
-        "Меню 'Фитнес' - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!",
-        228,
-        ".menu .container",
-    ).render(); // вызываем метод
+    // getResource('http://localhost:3000/menu')
+    // .then(data => {
+    //     data.forEach(({img, altimg, title, descr, price}) => {
+    //         new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+    //     })
+    // })
 
-    new MenuCard( // задаем экземпляры карточек
-        "img/tabs/elite.jpg",
-        "elite",
-        'Меню “Премиум”',
-        "В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!",
-        550,
-        ".menu .container",
+    getResource('http://localhost:3000/menu')
+    .then(data => createCard(data));
 
-    ).render(); // вызываем метод
+    function createCard(data) {
+        data.forEach(({img, altimg, title, descr, price}) => {
+            const element = document.createElement('div');
+            element.classList.add('menu__item');
+            element.innerHTML = `
+                <img src=${img} alt=${altimg}>
+                <h3 class="menu__item-subtitle">${title}</h3>
+                <div class="menu__item-descr">${descr}</div>
+                <div class="menu__item-divider"></div>
+                <div class="menu__item-price">
+                    <div class="menu__item-cost">Цена:</div>
+                    <div class="menu__item-total"><span>${price}</span> грн/день</div>
+                </div>
+            `;
 
-    new MenuCard( // задаем экземпляры карточек
-        "img/tabs/post.jpg",
-        "post",
-        'Меню "Постное"',
-        "Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.",
-        430,
-        ".menu .container",
-
-    ).render(); // вызываем метод
-
+            document.querySelector('.menu .container').append(element);
+        })
+    }
     // Forms
 
     const forms = document.querySelectorAll('form'); // получаем формы с idex.html
@@ -209,10 +216,22 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     forms.forEach(item => { // перебираем формы и для каждой запускаем функцию postData
-        postData(item);
+        bindPostData(item);
     });
 
-    function postData(form) { // 
+    const postData = async(url, data) => {
+        const res = await fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-type': 'application/json'
+            },
+            //body: formData альтернативный метод JSON - у
+            body: data
+        });
+        return await res.json();
+    }
+
+    function bindPostData(form) { // 
         form.addEventListener('submit', (e) => { // событие по нажатию кнопки
             e.preventDefault(); // обязательно задаем переменную и отменяем привычное поведение. Тк если этого не сделать страница будет перезагружаться
 
@@ -230,19 +249,10 @@ window.addEventListener('DOMContentLoaded', () => {
             // // request.setRequestHeader('Content-type', 'multipart/form-data'); когда создаем запрос через XMLHttpRequest() и затем отправляем его методом FormData() заголовок (setRequestHeader('Content-type', 'multipart/form-data')) создавать не нужно!
             const formData = new FormData(form); // FormData метод отправки запроса 
 
-            const object = {};
-            formData.forEach(function(value, key){
-                object[key] = value;
-            });
+            const json = JSON.stringify(Object.fromEntries(formData.entries()))
 
-            fetch('server.php', {
-                method: "POST",
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                //body: formData альтернативный метод JSON - у
-                body: JSON.stringify(object)
-            }).then(data => data.text())
+
+            postData('http://localhost:3000/requests', json)
             .then((data) => {
                     console.log(data); // data -это те данные которые нам вернул сервер, которые мы определяем как аргумент и передаем
                     showThanksModal(message.success);  
