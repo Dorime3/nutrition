@@ -317,9 +317,10 @@ window.addEventListener('DOMContentLoaded', () => {
           next = document.querySelector('.offer__slider-next'),
           current = document.querySelector('#current'),
           total = document.querySelector('#total'),
+          slider = document.querySelector('.offer__slider'),
           slideswrapper = document.querySelector('.offer__slider-wrapper'),
-          slidesField = document.querySelector('.offer__slider-inner'),
-          width = window.getComputedStyle(slideswrapper).width;
+          slidesField = document.querySelector('.offer__slider-inner'), // элемент в котором наши картинки идут подряд(лента)
+          width = window.getComputedStyle(slideswrapper).width; // ширина обертки нашего слайдера для конечного пользователя
 
     let slideIndex = 1;
     let offset = 0;
@@ -332,35 +333,95 @@ window.addEventListener('DOMContentLoaded', () => {
         current.textContent = slideIndex;
     }
 
-    slidesField.style.width = 100 * slides.length + '%';
+    slidesField.style.width = 100 * slides.length + '%'; // задаем ширину нашего элемента с картинками равного количеству картинок умноженного на 100%
+
+    slider.style.position = 'relative';
+
+    const indicators = document.createElement('ol'),
+          dots = [];
+
+    indicators.style.cssText = `
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 15;
+        display: flex;
+        justify-content: center;
+        margin-right: 15%;
+        margin-left: 15%;
+        list-style: none;
+    `;
+    slider.append(indicators);
+
+    for (let i = 0; i < slides.length; i++) {
+        const dot = document.createElement('li');
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.style.cssText = `
+            box-sizing: content-box;
+            flex: 0 1 auto;
+            width: 30px;
+            height: 6px;
+            margin-right: 3px;
+            margin-left: 3px;
+            cursor: pointer;
+            background-color: #fff;
+            background-clip: padding-box;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            opacity: .5;
+            transition: opacity .6s ease;
+        `;
+        indicators.append(dot);
+
+        dots.push(dot);
+
+        if (i == 0) {
+            dot.style.opacity = 1;
+        }
+    };
+
+
 
     slides.forEach (item => {
-        item.style.width = width;
+        item.style.width = width; // задаем ширину каждой картинки равной ширине нашей оберкти
     })
 
-    slidesField.style.display = 'flex';
-    slidesField.style.transition = '0.5s all';
-    slideswrapper.style.overflow = 'hidden';
+    slidesField.style.display = 'flex'; // выстраиваем нашу ленту в ряд 
+    slidesField.style.transition = '0.5s all'; // анимация
+    slideswrapper.style.overflow = 'hidden'; // скрываем все, что за пределами нашей обертки
+
+    function dotOpacity() {
+        dots.forEach(dot => dot.style.opacity = '0.5');
+        dots[slideIndex - 1].style.opacity = 1;
+    }
+
+    function currentValue() {
+        if (slides.length < 10) { // присваиваем текущему значению значение нашего счетчика
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+    }
 
     next.addEventListener('click', () => {
-        if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
+        if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) { // условие перехода в начало
             offset = 0;
         } else {
             offset += +width.slice(0, width.length - 2);
         }
-        slidesField.style.transform = `translateX(-${offset}px)`;
+        slidesField.style.transform = `translateX(-${offset}px)`; // сдвигаем по оси Х нашу ленту на количество пикселей равной ширине одной картинки
 
-        if (slideIndex == slides.length) {
+        if (slideIndex == slides.length) { // сбрасываем счетчик
             slideIndex = 1;
         } else {
             slideIndex++;
         }
 
-        if (slides.length < 10) {
-            current.textContent = `0${slideIndex}`;
-        } else {
-            current.textContent = slideIndex;
-        }
+        currentValue();
+
+        dotOpacity();
+
     });
 
     prev.addEventListener('click', () => {
@@ -377,14 +438,27 @@ window.addEventListener('DOMContentLoaded', () => {
             slideIndex--;
         }
 
-        if (slideIndex < 10) {
-            current.textContent = `0${slideIndex}`;
-        } else {
-            current.textContent = slideIndex;
-        }
+        currentValue();
+
+        dotOpacity();
 
     });
 
+    dots.forEach((dot) => {
+        dot.addEventListener('click', (e) => {
+            const slideTo = e.target.getAttribute('data-slide-to');
+            slideIndex = slideTo;
+
+            currentValue();
+
+            offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+            slidesField.style.transform = `translateX(-${offset}px)`;
+
+            dotOpacity();
+        });
+    });
+
+    // simple slider
 
 //     if (slides.length < 10) {
 //         total.textContent = `0${slides.length}`;
