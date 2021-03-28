@@ -28,7 +28,7 @@ function cards() {
                     <div class="menu__item-divider"></div>
                     <div class="menu__item-price">
                         <div class="menu__item-cost">Цена:</div>
-                        <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+                        <div class="menu__item-total"><span>${this.price}</span> руб/день</div>
                     </div>
                 `; // выводим элемент на страницу, присваиваем в верстку наши переменные через контекст вызова, которые мы определили в классе
                 this.parentElement.append(element); // помещаем элемент внутрь родителя
