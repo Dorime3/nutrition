@@ -24,8 +24,8 @@ function timer(id, deadline) {
             }
         }
     
-        function setClock(end) { // Основная функция, для вывода оставшегося времени 
-            const   timer = document.querySelector('.timer'), // получаем форму таймера со страницы, дальше получаем объекты с этой формы (дни, часы, минуты и тд)
+        function setClock(id, end) { // Основная функция, для вывода оставшегося времени 
+            const   timer = document.querySelector(id), // получаем форму таймера со страницы, дальше получаем объекты с этой формы (дни, часы, минуты и тд)
                     days = timer.querySelector('#days'),
                     hours = timer.querySelector('#hours'),
                     minutes = timer.querySelector('#minutes'),

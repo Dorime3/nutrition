@@ -23,7 +23,7 @@ window.addEventListener('DOMContentLoaded', () => {
         wrapper: '.offer__slider-wrapper', 
         field: '.offer__slider-inner'
     });
-    timer('.timer', '2020-04-11');
+    timer('.timer', '2021-04-11');
     forms('form', timerOpenId);
     cards();
     calc();

@@ -689,8 +689,8 @@ function timer(id, deadline) {
             }
         }
     
-        function setClock(end) { // Основная функция, для вывода оставшегося времени 
-            const   timer = document.querySelector('.timer'), // получаем форму таймера со страницы, дальше получаем объекты с этой формы (дни, часы, минуты и тд)
+        function setClock(id, end) { // Основная функция, для вывода оставшегося времени 
+            const   timer = document.querySelector(id), // получаем форму таймера со страницы, дальше получаем объекты с этой формы (дни, часы, минуты и тд)
                     days = timer.querySelector('#days'),
                     hours = timer.querySelector('#hours'),
                     minutes = timer.querySelector('#minutes'),
@@ -851,7 +851,7 @@ window.addEventListener('DOMContentLoaded', () => {
         wrapper: '.offer__slider-wrapper', 
         field: '.offer__slider-inner'
     });
-    (0,_modules_timer__WEBPACK_IMPORTED_MODULE_3__.default)('.timer', '2020-04-11');
+    (0,_modules_timer__WEBPACK_IMPORTED_MODULE_3__.default)('.timer', '2021-04-11');
     (0,_modules_forms__WEBPACK_IMPORTED_MODULE_4__.default)('form', timerOpenId);
     (0,_modules_cards__WEBPACK_IMPORTED_MODULE_5__.default)();
     (0,_modules_calc__WEBPACK_IMPORTED_MODULE_6__.default)();
