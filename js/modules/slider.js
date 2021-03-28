@@ -1,14 +1,14 @@
-function slider() {
+function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, field}) {
             // slider
 
-            const slides = document.querySelectorAll('.offer__slide'),
-            prev = document.querySelector('.offer__slider-prev'),
-            next = document.querySelector('.offer__slider-next'),
-            current = document.querySelector('#current'),
-            total = document.querySelector('#total'),
-            slider = document.querySelector('.offer__slider'),
-            slideswrapper = document.querySelector('.offer__slider-wrapper'),
-            slidesField = document.querySelector('.offer__slider-inner'), // элемент в котором наши картинки идут подряд(лента)
+            const slides = document.querySelectorAll(slide),
+            prev = document.querySelector(prevArrow),
+            next = document.querySelector(nextArrow),
+            current = document.querySelector(currentCounter),
+            total = document.querySelector(totalCounter),
+            slider = document.querySelector(container),
+            slideswrapper = document.querySelector(wrapper),
+            slidesField = document.querySelector(field), // элемент в котором наши картинки идут подряд(лента)
             width = window.getComputedStyle(slideswrapper).width; // ширина обертки нашего слайдера для конечного пользователя
 
     let slideIndex = 1;
@@ -195,4 +195,4 @@ function slider() {
 
 }
 
-module.exports = slider;
+export default slider;

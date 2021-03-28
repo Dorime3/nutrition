@@ -1,8 +1,6 @@
-function timer() {
+function timer(id, deadline) {
         //Timer
     
-        const deadline = '03-20-2021'; //задаем конечное время
-
         function timeDifference(end) { // функция для рассчета оставшегося времени
             const   t = Date.parse(end) - Date.parse(new Date()), // в милисекундах, дальше дробим на дни, часы, минуты
                     days = Math.floor(t / (1000*60*60*24)), 
@@ -48,8 +46,8 @@ function timer() {
                 }
             }
         }
-        setClock(deadline); //запускаем основную функцию, передаем в нее дедлайн
+        setClock(id, deadline); //запускаем основную функцию, передаем в нее дедлайн
     
 }
 
-module.exports = timer;
+export default timer;

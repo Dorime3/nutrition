@@ -1,7 +1,10 @@
-function forms() {
+import {close, open} from './modal';
+import {postData} from '../services/services';
+
+function forms(formSelector, timerOpenId) {
         // Forms
 
-        const forms = document.querySelectorAll('form'); // получаем формы с idex.html
+        const forms = document.querySelectorAll(formSelector); // получаем формы с idex.html
 
         const message = { // объект с необходимыми для нас сообщениями
             loading: 'img/form/spinner.svg',
@@ -13,17 +16,6 @@ function forms() {
             bindPostData(item);
         });
     
-        const postData = async(url, data) => {
-            const res = await fetch(url, {
-                method: "POST",
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                //body: formData альтернативный метод JSON - у
-                body: data
-            });
-            return await res.json();
-        };
     
         function bindPostData(form) { // 
             form.addEventListener('submit', (e) => { // событие по нажатию кнопки
@@ -74,7 +66,7 @@ function forms() {
         function showThanksModal(message) {
             const prevModalDialog = document.querySelector('.modal__dialog');
             prevModalDialog.classList.add('hide');
-            open();
+            open('.modal', timerOpenId);
             const thanksModal = document.createElement('div');
             thanksModal.classList.add('modal__dialog');
             thanksModal.innerHTML = `
@@ -89,7 +81,7 @@ function forms() {
                 thanksModal.remove();
                 prevModalDialog.classList.add('show');
                 prevModalDialog.classList.remove('hide');
-                close();
+                close('.modal');
             },4000);
     
         }
@@ -98,4 +90,4 @@ function forms() {
     
 }
 
-module.exports = forms;
+export default forms;
